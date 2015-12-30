@@ -1,10 +1,9 @@
 package com.example.dialogrefresh;
 
-import com.example.dialogrefresh.DialogThread.OnBackThread;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -13,6 +12,9 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
+
+import com.example.dialogrefresh.DialogAsync.OnBackAsync;
+import com.example.dialogrefresh.DialogThread.OnBackThread;
 
 /**
  * =================================================
@@ -43,8 +45,6 @@ public class MainActivity extends Activity implements OnClickListener {
 	private Handler handler = new Handler() {
 		@Override
 		public void handleMessage(Message msg) {
-			Log.i(TAG, "what:" + msg.what);
-			Log.i(TAG, "obj:" + msg.obj);
 			super.handleMessage(msg);
 			switch (msg.what) {
 			case Start:
@@ -129,8 +129,28 @@ public class MainActivity extends Activity implements OnClickListener {
 	 * 2.异步方式
 	 */
 	private void asyncStart() {
-		// TODO Auto-generated method stub
-		
+		DialogAsync dialogAsync = new DialogAsync();
+		dialogAsync.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, this);
+		dialogAsync.setOnBackAsyncListener(new OnBackAsync() {
+			@Override
+			public void onStart() {
+				Message msg = Message.obtain();
+				msg.what = Start;
+				handler.sendEmptyMessage(Start);
+			}
+			@Override
+			public void onBack(String backName) {
+				Message msg = Message.obtain();
+				msg.what = Back;
+				msg.obj = backName;
+				handler.sendMessage(msg);
+			}
+			@Override
+			public void onEnd() {
+				Message msg = Message.obtain();
+				msg.what = End;
+				handler.sendEmptyMessage(End);
+			}
+		});
 	}
-
 }
