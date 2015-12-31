@@ -9,12 +9,23 @@
         android:id="@+id/thread"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="子线程方式" />
+        android:text="子线程回调方式" />
 
     <Button
         android:id="@+id/async"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="异步方式" />
+        android:text="异步回调方式" />
+
+    <Button
+        android:id="@+id/main"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="ui线程回调方式" />
+    <Button
+        android:id="@+id/main1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="ui线程回调方式(直接)" />
 
 </LinearLayout>

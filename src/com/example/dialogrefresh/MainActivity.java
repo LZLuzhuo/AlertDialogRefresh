@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.dialogrefresh.DialogAsync.OnBackAsync;
+import com.example.dialogrefresh.DialogMain.OnBackMain;
 import com.example.dialogrefresh.DialogThread.OnBackThread;
 
 /**
@@ -62,6 +63,8 @@ public class MainActivity extends Activity implements OnClickListener {
 			}
 		}
 	};
+	private Button main;
+	private Button main1;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -74,15 +77,21 @@ public class MainActivity extends Activity implements OnClickListener {
 	private void initView() {
 		thread = (Button) findViewById(R.id.thread);
 		async = (Button) findViewById(R.id.async);
+		main = (Button) findViewById(R.id.main);
+		main1 = (Button) findViewById(R.id.main1);
 		
 		thread.setOnClickListener(this);
 		async.setOnClickListener(this);
+		main.setOnClickListener(this);
+		main1.setOnClickListener(this);
 	}
 	
 	@Override
 	public void onClick(View v) {
-		if(thread == v) threadStart(); //1.子线程方式
-		if(async == v) asyncStart(); //2.异步方式
+		if(thread == v) threadStart(); //1.子线程回调方式
+		if(async == v) asyncStart(); //2.异步回调方式
+		if(main == v) mainStart(); //3.主线程回调方式
+		if(main1 == v) mainStart1(); //4.主线程直接回调方式
 	}
 	
 	private void initData() {
@@ -130,7 +139,6 @@ public class MainActivity extends Activity implements OnClickListener {
 	 */
 	private void asyncStart() {
 		DialogAsync dialogAsync = new DialogAsync();
-		dialogAsync.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, this);
 		dialogAsync.setOnBackAsyncListener(new OnBackAsync() {
 			@Override
 			public void onStart() {
@@ -152,5 +160,60 @@ public class MainActivity extends Activity implements OnClickListener {
 				handler.sendEmptyMessage(End);
 			}
 		});
+		dialogAsync.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, this);
+	}
+	
+	/**
+	 * 3.主线程回调方式
+	 */
+	private void mainStart() {
+		DialogMain dialogMain = new DialogMain();
+		dialogMain.setOnBackMainListener(new OnBackMain() {
+			@Override
+			public void onStart() {
+				Message msg = Message.obtain();
+				msg.what = Start;
+				handler.sendEmptyMessage(Start);
+			}
+			@Override
+			public void onBack(String backName) {
+				Message msg = Message.obtain();
+				msg.what = Back;
+				msg.obj = backName;
+				handler.sendMessage(msg);
+			}
+			@Override
+			public void onEnd() {
+				Message msg = Message.obtain();
+				msg.what = End;
+				handler.sendEmptyMessage(End);
+			}
+		});
+		dialogMain.start();
+	}
+	
+	/**
+	 * 4.主线程回调方式(非Handler)
+	 */
+	private void mainStart1() {
+		DialogMain dialogMain = new DialogMain();
+		dialogMain.setOnBackMainListener(new OnBackMain() {
+			@Override
+			public void onStart() {
+				dialog.show();// 显示
+				Log.i(TAG, "start");
+			}
+			@Override
+			public void onBack(String backName) {
+				textview.setText(backName);
+				Log.i(TAG, backName);
+			}
+			@Override
+			public void onEnd() {
+				dialog.dismiss();
+				Log.i(TAG, "end");
+			}
+		});
+		dialogMain.start();
 	}
 }
