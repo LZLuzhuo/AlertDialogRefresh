@@ -20,25 +20,19 @@ import android.os.SystemClock;
  **/
 public class DialogMain {
 	private int x = 0;
-	private OnBackMain onBackMain;
+	private OnBack onBack;
 	
 	public void start(){
-		if(onBackMain != null) onBackMain.onStart();
+		if(onBack != null) onBack.onStart();
 		while(x<10){
-			if(onBackMain != null) onBackMain.onBack(String.valueOf(x));
+			if(onBack != null) onBack.onBack(String.valueOf(x));
 			SystemClock.sleep(1000);
 			x++;
 		}
-		if(onBackMain != null) onBackMain.onEnd();
+		if(onBack != null) onBack.onEnd();
 	}
 	
-	public void setOnBackMainListener(OnBackMain onBackMain){
-		this.onBackMain = onBackMain;
-	}
-	
-	public interface OnBackMain{
-		void onStart();
-		void onBack(String backName);
-		void onEnd();
+	public void setOnBackListener(OnBack onBack){
+		this.onBack= onBack;
 	}
 }

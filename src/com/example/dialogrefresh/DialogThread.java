@@ -20,29 +20,23 @@ import android.os.SystemClock;
  **/
 public class DialogThread {
 	private int x = 0;
-	private OnBackThread onBackThread;
+	private OnBack onBack;
 	
 	public void start(){
 		new Thread(){
 			public void run() {
-				if(onBackThread != null) onBackThread.onStart();
+				if(onBack != null) onBack.onStart();
 				while(x<10){
-					if(onBackThread != null) onBackThread.onBack(String.valueOf(x));
+					if(onBack != null) onBack.onBack(String.valueOf(x));
 					SystemClock.sleep(1000);
 					x++;
 				}
-				if(onBackThread != null) onBackThread.onEnd();
+				if(onBack != null) onBack.onEnd();
 			};
 		}.start();
 	}
 	
-	public void setOnBackThreadListener(OnBackThread onBackThread){
-		this.onBackThread = onBackThread;
-	}
-	
-	public interface OnBackThread{
-		void onStart();
-		void onBack(String backName);
-		void onEnd();
+	public void setOnBackListener(OnBack onBack){
+		this.onBack= onBack;
 	}
 }

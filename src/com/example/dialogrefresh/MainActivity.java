@@ -13,10 +13,6 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.example.dialogrefresh.DialogAsync.OnBackAsync;
-import com.example.dialogrefresh.DialogMain.OnBackMain;
-import com.example.dialogrefresh.DialogThread.OnBackThread;
-
 /**
  * =================================================
  * 
@@ -26,7 +22,7 @@ import com.example.dialogrefresh.DialogThread.OnBackThread;
  * 
  * 创建日期:2015-12-30 下午9:08:16
  * 
- * 描述:关于AlertDialog刷新问题的研究
+ * 描述:关于AlertDialog自定义布局刷新问题的研究
  * 
  * 修订历史:
  * 
@@ -110,7 +106,7 @@ public class MainActivity extends Activity implements OnClickListener {
 	 */
 	private void threadStart() {
 		DialogThread dialogThread = new DialogThread();
-		dialogThread.setOnBackThreadListener(new OnBackThread() {
+		dialogThread.setOnBackListener(new OnBack() {
 			@Override
 			public void onStart() {
 				Message msg = Message.obtain();
@@ -139,7 +135,7 @@ public class MainActivity extends Activity implements OnClickListener {
 	 */
 	private void asyncStart() {
 		DialogAsync dialogAsync = new DialogAsync();
-		dialogAsync.setOnBackAsyncListener(new OnBackAsync() {
+		dialogAsync.setOnBackListener(new OnBack() {
 			@Override
 			public void onStart() {
 				Message msg = Message.obtain();
@@ -168,7 +164,7 @@ public class MainActivity extends Activity implements OnClickListener {
 	 */
 	private void mainStart() {
 		DialogMain dialogMain = new DialogMain();
-		dialogMain.setOnBackMainListener(new OnBackMain() {
+		dialogMain.setOnBackListener(new OnBack() {
 			@Override
 			public void onStart() {
 				Message msg = Message.obtain();
@@ -197,7 +193,7 @@ public class MainActivity extends Activity implements OnClickListener {
 	 */
 	private void mainStart1() {
 		DialogMain dialogMain = new DialogMain();
-		dialogMain.setOnBackMainListener(new OnBackMain() {
+		dialogMain.setOnBackListener(new OnBack() {
 			@Override
 			public void onStart() {
 				dialog.show();// 显示
